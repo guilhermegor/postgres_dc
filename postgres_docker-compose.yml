@@ -1,0 +1,47 @@
+
+services:
+  postgres:
+    container_name: postgres_docker_msk-main-postgres-1
+    image: postgres:17.2
+    # change permission of the directory /var/lib/postgresql/data to 0700
+    #   - 0700: owner, the postgres user in this case - full permission
+    #   - full permission: read, write, execute
+    #   - /var/lib/postgresql/data: default directory where postgres stores its data
+    command: > 
+      bash -c "chmod -R 0700 /var/lib/postgresql/data &&docker-entrypoint.sh postgres"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - PGDATA=/var/lib/postgresql/data
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init_scripts:/docker-entrypoint-initdb.d:rw
+    ports:
+      - "15432:5432"
+    networks:
+      - postgres_docker_msk-main_postgres-compose-network
+    restart: no
+
+  pgadmin:
+    container_name: postgres_docker_msk-main-pgadmin-1
+    image: dpage/pgadmin4:8.14.0
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "15433:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - postgres_docker_msk-main_postgres-compose-network
+    restart: no
+
+networks:
+  postgres_docker_msk-main_postgres-compose-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  pgadmin_data:
