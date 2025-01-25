@@ -1,7 +1,7 @@
 
 services:
   postgres:
-    container_name: postgres_docker_msk-main-postgres-1
+    container_name: postgres_container
     image: postgres:17.2
     # change permission of the directory /var/lib/postgresql/data to 0700
     #   - 0700: owner, the postgres user in this case - full permission
@@ -19,11 +19,11 @@ services:
     ports:
       - "15432:5432"
     networks:
-      - postgres_docker_msk-main_postgres-compose-network
+      - postgres_network
     restart: no
 
   pgadmin:
-    container_name: postgres_docker_msk-main-pgadmin-1
+    container_name: pgadmin_container
     image: dpage/pgadmin4:8.14.0
     environment:
       - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
@@ -35,11 +35,11 @@ services:
     depends_on:
       - postgres
     networks:
-      - postgres_docker_msk-main_postgres-compose-network
+      - postgres_network
     restart: no
 
 networks:
-  postgres_docker_msk-main_postgres-compose-network:
+  postgres_network:
     driver: bridge
 
 volumes:
