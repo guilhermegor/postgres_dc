@@ -10,18 +10,17 @@ services:
     command: > 
       bash -c "chmod -R 0700 /var/lib/postgresql/data &&docker-entrypoint.sh postgres"
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - PGDATA=/var/lib/postgresql/data
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init_scripts:/docker-entrypoint-initdb.d:rw
+      - ./db_init_scripts:/docker-entrypoint-initdb.d:rw
     ports:
       - "15432:5432"
     networks:
       - postgres_network
     restart: no
-
   pgadmin:
     container_name: pgadmin_container
     image: dpage/pgadmin4:8.14.0
