@@ -8,8 +8,7 @@ WITH
     TEMPLATE = template0
     ENCODING = 'UTF8'
     LOCALE_PROVIDER = icu
-    ICU_LOCALE = 'pt-BR'
-    OWNER = postgres;
+    ICU_LOCALE = 'pt-BR';
 
 -- listing available databases
 DO $$ 
@@ -22,9 +21,6 @@ BEGIN
         RAISE NOTICE 'Database: %', rec.datname;
     END LOOP;
 END $$;
-
--- grant privliges
-GRANT ALL PRIVILEGES ON DATABASE mktdata_collector TO postgres;
 
 -- switch to mktdata_collector database
 \connect mktdata_collector;
